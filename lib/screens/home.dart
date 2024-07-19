@@ -1,3 +1,4 @@
+import 'package:currencyconverter/components/usdtoany.dart';
 import 'package:currencyconverter/functions/fetchrates.dart';
 import 'package:currencyconverter/models/ratesmodel.dart';
 import 'package:flutter/material.dart';
@@ -11,12 +12,15 @@ class Home extends StatefulWidget{
 
 class _HomeState extends State<Home> {
   late Future<RatesModel> result; // comes way after after going to fetchrates then ratesModel then the return in here
+  late Future<Map> allCurrencies;
   final formKey = GlobalKey<FormState>();
   @override
 
   void initState() {
     super.initState();
     result = fetchrates();
+    // we initialize the allCurrencies from allCurrencies.dart
+    allCurrencies = fetchcurrencies();
   }
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -50,7 +54,24 @@ class _HomeState extends State<Home> {
                 );
               }
               return Center(
-                child: Text(snapshot.data!.rates.toString(), style: const TextStyle(fontSize: 20, color: Colors.white),),
+                // child: Text(snapshot.data!.rates.toString(), style: const TextStyle(fontSize: 20, color: Colors.white),),
+                child: FutureBuilder<Map>(
+                  future: allCurrencies,
+                  builder: (context, currSnapshot) {
+                    // we build a list
+                    if(currSnapshot.connectionState == ConnectionState.waiting){
+                      return const Center(
+                        // to see if we get data or not
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    return Column(
+                      children: [
+                        UsdToAny(rates: snapshot.data!.rates, currencies: currSnapshot.data!)
+                      ],
+                    );
+                  },
+                )
               );
             }
           ),

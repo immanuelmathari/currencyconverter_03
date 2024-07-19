@@ -1,3 +1,4 @@
+import 'package:currencyconverter/models/allCurrencies.dart';
 import 'package:currencyconverter/models/ratesmodel.dart';
 import 'package:http/http.dart' as http;
 
@@ -8,4 +9,15 @@ Future<RatesModel> fetchrates() async {
 
 
   return result;
+}
+
+Future<Map> fetchcurrencies() async {
+  final response = await http.get(Uri.parse('https://openexchangerates.org/api/currencies.json?app_id=7d382a11708a47beb3e9e0c64d6d56dc'));
+  final allCurrencies = allCurrenciesFromJson(response.body);
+  return allCurrencies;
+}
+
+String convertusd(Map exchangesRates, String usd, String currency){
+  String output = ((exchangesRates[currency] * double.parse(usd).toStringAsFixed(2))).toString();
+  return output;
 }
