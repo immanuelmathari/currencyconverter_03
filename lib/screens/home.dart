@@ -1,3 +1,4 @@
+import 'package:currencyconverter/components/anytoAny.dart';
 import 'package:currencyconverter/components/usdtoany.dart';
 import 'package:currencyconverter/functions/fetchrates.dart';
 import 'package:currencyconverter/models/ratesmodel.dart';
@@ -67,7 +68,11 @@ class _HomeState extends State<Home> {
                     }
                     return Column(
                       children: [
-                        UsdToAny(rates: snapshot.data!.rates, currencies: currSnapshot.data!)
+                        UsdToAny(rates: snapshot.data!.rates, currencies: currSnapshot.data!),
+                        SizedBox(
+                          height: 75,
+                        ),
+                        AnyToAny(rates: snapshot.data!.rates, currencies: currSnapshot.data!),
                       ],
                     );
                   },
